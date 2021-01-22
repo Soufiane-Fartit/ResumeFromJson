@@ -26,23 +26,19 @@ def add_header(doc, header):
             p.paragraph_format.space_before = Cm(0)
             p.paragraph_format.space_after = Cm(0.7)
             p.paragraph_format.line_spacing_rule = WD_LINE_SPACING.EXACTLY
-    #doc.add_paragraph("")
+
     return doc
 
 
 def add_profil(doc, profil):
-    #p = doc.add_paragraph("")
-    #p.add_run("PROFIL").bold = True
     doc = add_title(doc, "PROFIL")
     for elem in profil :
         p = doc.add_paragraph(elem)
         p.paragraph_format.line_spacing = 1
-    #doc.add_paragraph("")
+
     return doc
 
 def add_formation(doc, formation):
-    #p = doc.add_paragraph("")
-    #p.add_run("FORMATION ACADEMIQUE").bold = True
     doc = add_title(doc, "FORMATION ACADEMIQUE")
     for form in formation :
         p = doc.add_paragraph(form['date']+' : '+form['diplome']+' - '+form['ecole'])
@@ -54,37 +50,41 @@ def add_formation(doc, formation):
     return doc
 
 def add_experience(doc, experience):
-    #p = doc.add_paragraph("")
-    #p.add_run("EXPERIENCE PROFESSIONNELLE").bold = True
     doc = add_title(doc, "EXPERIENCE PROFESSIONNELLE")
     for exp in experience :
+        # ADD JOB TITLE LINE
         p = doc.add_paragraph(exp['title'])
         p.paragraph_format.space_before = Cm(0.2)
         p.paragraph_format.space_after = Cm(0)
         p.paragraph_format.line_spacing = 1
         for run in p.runs:
             run.bold = True
+        
+        # ADD COMPANY NAME, ADRESS, DATES
         p = doc.add_paragraph(exp['company'] + ', '+ (9*"\t").join([exp['site'], exp['date']]))
         p.paragraph_format.line_spacing = 1
         p.paragraph_format.space_before = Cm(0) 
         p.paragraph_format.space_after = Cm(0) 
         for run in p.runs:
             run.italic = True
+        
+        # ADD CONTENT
         if exp['text'] != "" :
             p = doc.add_paragraph(exp['text'])
             p.paragraph_format.line_spacing = 1
+        
+        # ADD BULLETPOINTS
         for task in exp['tasks'] :
             p = doc.add_paragraph(task, style='List Bullet')
             p.paragraph_format.line_spacing = 1
             p.paragraph_format.space_before = Cm(0)
             p.paragraph_format.space_after = Cm(0)
+        
         doc.add_paragraph('Environnement : ' + ', '.join(exp['Environnement']))
-        #doc.add_paragraph("")
+
     return doc
 
 def add_skills(doc, skills):
-    #p = doc.add_paragraph("")
-    #p.add_run("COMPETENCES TECHNIQUES").bold = True
     doc = add_title(doc, "COMPETENCES TECHNIQUES")
     for k, v in skills.items():
         if len(v) !=0 :
@@ -92,12 +92,10 @@ def add_skills(doc, skills):
             p.paragraph_format.line_spacing = 1
             p.paragraph_format.space_before = Cm(0)
             p.paragraph_format.space_after = Cm(0)
-    #doc.add_paragraph("")
+
     return doc
 
 def add_certif_projects(doc, certifs, projects):
-    #p = doc.add_paragraph("")
-    #p.add_run("CERTIFICATIONS ET PROJETS PERSONNELS").bold = True
     doc = add_title(doc, "CERTIFICATIONS ET PROJETS PERSONNELS")
 
     for certif in certifs:
@@ -107,25 +105,17 @@ def add_certif_projects(doc, certifs, projects):
         p = doc.add_paragraph(project, style='List Bullet')
         p.paragraph_format.line_spacing = 1
 
-    #doc.add_paragraph("")
     return doc
 
 def add_langues(doc, langues):
-    #p = doc.add_paragraph("")
-    #p.add_run("LANGUES").bold = True
     doc = add_title(doc, "LANGUES")
-    #for k, v in langues.items():
-    #    p = doc.add_paragraph(k + ' : ' + v)
-    #    p.paragraph_format.line_spacing = 1
-    #    p.paragraph_format.space_before = Cm(0) 
-    #    p.paragraph_format.space_after = Cm(0)
     
     p = doc.add_paragraph((5*' '+3*'\t').join([k+' : '+v for k,v in langues.items()]))
     p.alignment = WD_ALIGN_PARAGRAPH.CENTER
     p.paragraph_format.line_spacing = 1
     p.paragraph_format.space_before = Cm(0) 
     p.paragraph_format.space_after = Cm(0)
-    #doc.add_paragraph("")
+
     return doc
 
 def set_margin(doc, margin = 1.0):
@@ -135,6 +125,7 @@ def set_margin(doc, margin = 1.0):
         section.bottom_margin = Cm(margin)
         section.left_margin = Cm(margin)
         section.right_margin = Cm(margin) 
+    
     return doc
 
 def first_child_found_in(parent, tagnames):
